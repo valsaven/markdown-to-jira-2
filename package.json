@@ -1,0 +1,62 @@
+{
+  "name": "markdown-to-jira-2",
+  "displayName": "Markdown to JIRA 2",
+  "description": "A simple extension for converting between Markdown and JIRA formats",
+  "version": "1.0.0",
+  "homepage": "https://github.com/valsaven/markdown-to-jira-2/blob/master",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/valsaven/markdown-to-jira-2.git"
+  },
+  "bugs": {
+    "url": "https://github.com/valsaven/markdown-to-jira-2/issues"
+  },
+  "author": "Val Saven <val.saven@gmail.com>",
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "publisher": "valsaven",
+  "engines": {
+    "vscode": "^1.92.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": ["onCommand:extension.convertMarkdown", "onCommand:extension.convertJira"],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.convertMarkdown",
+        "title": "Convert Markdown to JIRA"
+      },
+      {
+        "command": "extension.convertJira",
+        "title": "Convert JIRA to Markdown"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "package:vsce": "vsce package",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "biome lint ./src",
+    "lint:fix": "biome format --write ./src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.3",
+    "@types/node": "22.1.0",
+    "@types/vscode": "^1.92.0",
+    "@vscode/test-cli": "^0.0.9",
+    "@vscode/test-electron": "^2.4.1",
+    "@vscode/vsce": "^2.31.1",
+    "jira2md": "^3.0.1",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.5.4",
+    "webpack": "^5.93.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
