@@ -17,11 +17,15 @@ The following commands are available in the command palette (`Ctrl+Shift+P` or `
 
 ## Installation
 
-To install this extension:
+### VS Code (official)
 
-1. Open the Extensions view (`Ctrl+Shift+X` or `Cmd+Shift+X` on macOS)
-2. Search for "Markdown to JIRA 2"
-3. Click "Install"
+[Install from Marketplace](https://marketplace.visualstudio.com/items?itemName=valsaven.markdown-to-jira-2)
+
+### VSCodium / GitHub Codespaces / any Open VSX-compatible editor
+
+[Install from Open VSX](https://open-vsx.org/extension/valsaven/markdown-to-jira-2)
+
+Alternatively, search for **Markdown to JIRA 2** in the Extensions view (`Ctrl+Shift+X`) - it will appear in both registries.
 
 ## Usage
 
