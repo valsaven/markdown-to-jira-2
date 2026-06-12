@@ -1,9 +1,14 @@
 import path from 'node:path';
 import * as vscode from 'vscode';
 
-export const createNewDocument = async (directory: string, content: string, fileExtension: string): Promise<void> => {
-  const newFilePath = path.join(directory, `formatted_file${fileExtension}`);
-  const uri = vscode.Uri.file(newFilePath).with({ scheme: 'untitled' });
+export const createNewDocument = async (
+  directory: string | undefined,
+  content: string,
+  fileExtension: string,
+): Promise<void> => {
+  const uri = directory
+    ? vscode.Uri.file(path.join(directory, `formatted_file${fileExtension}`)).with({ scheme: 'untitled' })
+    : vscode.Uri.parse(`untitled:formatted_file${fileExtension}`);
 
   const document = await vscode.workspace.openTextDocument(uri);
   const edit = new vscode.WorkspaceEdit();
