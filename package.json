@@ -2,7 +2,7 @@
   "name": "markdown-to-jira-2",
   "displayName": "Markdown to JIRA 2",
   "description": "A simple extension for converting between Markdown and JIRA formats",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "homepage": "https://github.com/valsaven/markdown-to-jira-2/blob/master",
   "repository": {
     "type": "git",
@@ -35,30 +35,30 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run package",
-    "compile": "npm run check-types && npm run lint && node esbuild.js",
+    "vscode:prepublish": "pnpm run package",
+    "compile": "pnpm run check-types && pnpm run lint && node esbuild.js",
     "watch": "npm-run-all -p watch:*",
     "watch:esbuild": "node esbuild.js --watch",
     "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
-    "package": "npm run check-types && npm run lint && node esbuild.js --production",
+    "package": "pnpm run check-types && pnpm run lint && node esbuild.js --production",
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
-    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/mocha": "^10.0.10",
-    "@types/node": "24.x",
-    "@types/vscode": "^1.106.1",
-    "@vscode/test-cli": "^0.0.12",
-    "@vscode/test-electron": "^2.5.2",
-    "esbuild": "^0.27.1",
-    "eslint": "^9.39.1",
-    "jira2md": "^3.0.1",
-    "npm-run-all": "^4.1.5",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.48.1"
+    "@types/mocha": "10.0.10",
+    "@types/node": "25.x",
+    "@types/vscode": "1.120.0",
+    "@vscode/test-cli": "0.0.12",
+    "@vscode/test-electron": "2.5.2",
+    "esbuild": "0.28.0",
+    "eslint": "10.4.1",
+    "jira2md": "3.0.1",
+    "npm-run-all": "4.1.5",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.60.1"
   }
 }

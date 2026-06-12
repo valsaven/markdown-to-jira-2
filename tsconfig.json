@@ -11,5 +11,9 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedParameters": true,
+    "types": [
+      "node",
+      "mocha"
+    ]
   }
 }
