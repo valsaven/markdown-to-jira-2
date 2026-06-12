@@ -16,7 +16,7 @@ type ResolvedConversion = {
   convertFunction: (text: string) => string;
 };
 
-const getConversionForFormat = (format: DocumentFormat): ResolvedConversion => {
+const getConversionForFormat = (format: Exclude<DocumentFormat, 'unknown'>): ResolvedConversion => {
   if (format === 'markdown') {
     return {
       targetExtension: '.jira',
@@ -24,10 +24,15 @@ const getConversionForFormat = (format: DocumentFormat): ResolvedConversion => {
     };
   }
 
-  return {
-    targetExtension: '.md',
-    convertFunction: jira2md.to_markdown,
-  };
+  if (format === 'jira') {
+    return {
+      targetExtension: '.md',
+      convertFunction: jira2md.to_markdown,
+    };
+  }
+
+  const _exhaustive: never = format;
+  throw new Error(`Unhandled format: ${_exhaustive}`);
 };
 
 const promptDocumentFormat = async (): Promise<DocumentFormat | undefined> => {
@@ -42,20 +47,6 @@ const promptDocumentFormat = async (): Promise<DocumentFormat | undefined> => {
   return selection?.value;
 };
 
-const resolveUntitledConversion = async (document: vscode.TextDocument): Promise<ResolvedConversion | undefined> => {
-  let format = detectDocumentFormat(document.getText(), document.languageId);
-
-  if (format === 'unknown') {
-    format = await promptDocumentFormat() ?? 'unknown';
-  }
-
-  if (format === 'unknown') {
-    return undefined;
-  }
-
-  return getConversionForFormat(format);
-};
-
 const convertDocument = async (options: ConversionOptions): Promise<void> => {
   const editor = vscode.window.activeTextEditor;
   if (!editor) {
@@ -64,16 +55,32 @@ const convertDocument = async (options: ConversionOptions): Promise<void> => {
   }
 
   const document = editor.document;
-  const conversion = document.isUntitled
-    ? await resolveUntitledConversion(document)
-    : isConvertibleDocument(document, options.sourceExtension)
-      ? { targetExtension: options.targetExtension, convertFunction: options.convertFunction }
-      : undefined;
 
-  if (!conversion) {
-    if (!document.isUntitled) {
-      vscode.window.showInformationMessage(options.errorMessage);
+  let conversion: ResolvedConversion | undefined;
+
+  if (document.isUntitled) {
+    // For untitled documents we can't check extension, so honour the invoked
+    // command directly. Fall back to auto-detection only when the format score
+    // is ambiguous, and prompt the user when even detection can't decide.
+    const detectedFormat = detectDocumentFormat(document.getText(), document.languageId);
+
+    if (detectedFormat === 'unknown') {
+      const promptedFormat = await promptDocumentFormat();
+      // If the user dismissed the QuickPick, silently do nothing.
+      if (!promptedFormat || promptedFormat === 'unknown') {
+        return;
+      }
+      conversion = getConversionForFormat(promptedFormat);
+    } else {
+      conversion = getConversionForFormat(detectedFormat);
     }
+  } else if (isConvertibleDocument(document, options.sourceExtension)) {
+    conversion = {
+      targetExtension: options.targetExtension,
+      convertFunction: options.convertFunction,
+    };
+  } else {
+    vscode.window.showInformationMessage(options.errorMessage);
     return;
   }
 
@@ -81,7 +88,7 @@ const convertDocument = async (options: ConversionOptions): Promise<void> => {
   await createNewDocument(
     getOutputDirectory(document),
     formattedText,
-    conversion.targetExtension
+    conversion.targetExtension,
   );
 };
 

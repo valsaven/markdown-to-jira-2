@@ -1,7 +1,7 @@
 export type DocumentFormat = 'markdown' | 'jira' | 'unknown';
 
 const JIRA_PATTERNS: RegExp[] = [
-  /\{code[:|\s]/,
+  /\{code(?:[:|}\s])/,
   /\{noformat\}/,
   /\{quote\}/,
   /^h[1-6]\.\s/m,
@@ -12,7 +12,7 @@ const JIRA_PATTERNS: RegExp[] = [
 const MARKDOWN_PATTERNS: RegExp[] = [
   /```[\s\S]*?```/,
   /~~~[\s\S]*?~~~/,
-  /^#{2,6}\s/m,
+  /^#{1,6}\s/m,
   /\[[^\]]+\]\([^)]+\)/,
   /!\[[^\]]*\]\([^)]+\)/,
   /^\s*[-*+]\s+\S/m,
@@ -23,10 +23,6 @@ const scorePatterns = (text: string, patterns: RegExp[]): number => {
 };
 
 export const detectDocumentFormat = (text: string, languageId?: string): DocumentFormat => {
-  if (languageId === 'markdown') {
-    return 'markdown';
-  }
-
   const jiraScore = scorePatterns(text, JIRA_PATTERNS);
   const markdownScore = scorePatterns(text, MARKDOWN_PATTERNS);
 
@@ -35,6 +31,10 @@ export const detectDocumentFormat = (text: string, languageId?: string): Documen
   }
 
   if (markdownScore > jiraScore) {
+    return 'markdown';
+  }
+
+  if (languageId === 'markdown') {
     return 'markdown';
   }
 

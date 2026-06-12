@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Changes]
 
+### 1.1.1
+
+- Correct format detection and untitled document conversion
+
 ### 1.1.0
 
 - Allow Markdown ↔ JIRA conversion from untitled editors

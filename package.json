@@ -2,7 +2,7 @@
   "name": "markdown-to-jira-2",
   "displayName": "Markdown to JIRA 2",
   "description": "A simple extension for converting between Markdown and JIRA formats",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "homepage": "https://github.com/valsaven/markdown-to-jira-2/blob/master",
   "repository": {
     "type": "git",
