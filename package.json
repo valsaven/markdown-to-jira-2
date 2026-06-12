@@ -2,7 +2,7 @@
   "name": "markdown-to-jira-2",
   "displayName": "Markdown to JIRA 2",
   "description": "A simple extension for converting between Markdown and JIRA formats",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "homepage": "https://github.com/valsaven/markdown-to-jira-2/blob/master",
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
   "icon": "images/icon.png",
   "publisher": "valsaven",
   "engines": {
-    "vscode": "^1.106.1"
+    "vscode": "^1.120.0"
   },
   "categories": [
     "Other"
@@ -46,7 +46,8 @@
     "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "vsix": "vsce package"
   },
   "devDependencies": {
     "@types/mocha": "10.0.10",
@@ -54,6 +55,7 @@
     "@types/vscode": "1.120.0",
     "@vscode/test-cli": "0.0.12",
     "@vscode/test-electron": "2.5.2",
+    "@vscode/vsce": "3.9.2",
     "esbuild": "0.28.0",
     "eslint": "10.4.1",
     "jira2md": "3.0.1",

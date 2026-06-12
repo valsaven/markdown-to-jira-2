@@ -1,8 +1,10 @@
 .vscode/**
 .vscode-test/**
+.idea/**
 out/**
 node_modules/**
 src/**
+@types/**
 .gitignore
 esbuild.js
 vsc-extension-quickstart.md
@@ -11,3 +13,7 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 **/.vscode-test.*
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+*.vsix
