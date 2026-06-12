@@ -1,13 +1,59 @@
 import jira2md from 'jira2md';
 import * as vscode from 'vscode';
 import { createNewDocument } from './documentUtils';
-import { getDirectoryPath, getFileExtension } from './fileUtils';
+import { type DocumentFormat, detectDocumentFormat } from './formatUtils';
+import { getOutputDirectory, isConvertibleDocument } from './fileUtils';
 
 type ConversionOptions = {
   sourceExtension: string;
   targetExtension: string;
   convertFunction: (text: string) => string;
   errorMessage: string;
+};
+
+type ResolvedConversion = {
+  targetExtension: string;
+  convertFunction: (text: string) => string;
+};
+
+const getConversionForFormat = (format: DocumentFormat): ResolvedConversion => {
+  if (format === 'markdown') {
+    return {
+      targetExtension: '.jira',
+      convertFunction: jira2md.to_jira,
+    };
+  }
+
+  return {
+    targetExtension: '.md',
+    convertFunction: jira2md.to_markdown,
+  };
+};
+
+const promptDocumentFormat = async (): Promise<DocumentFormat | undefined> => {
+  const selection = await vscode.window.showQuickPick(
+    [
+      { label: 'Markdown', value: 'markdown' as const },
+      { label: 'JIRA', value: 'jira' as const },
+    ],
+    { placeHolder: 'Select the format of the current untitled document' },
+  );
+
+  return selection?.value;
+};
+
+const resolveUntitledConversion = async (document: vscode.TextDocument): Promise<ResolvedConversion | undefined> => {
+  let format = detectDocumentFormat(document.getText(), document.languageId);
+
+  if (format === 'unknown') {
+    format = await promptDocumentFormat() ?? 'unknown';
+  }
+
+  if (format === 'unknown') {
+    return undefined;
+  }
+
+  return getConversionForFormat(format);
 };
 
 const convertDocument = async (options: ConversionOptions): Promise<void> => {
@@ -18,18 +64,24 @@ const convertDocument = async (options: ConversionOptions): Promise<void> => {
   }
 
   const document = editor.document;
-  const fileExtension = getFileExtension(document);
+  const conversion = document.isUntitled
+    ? await resolveUntitledConversion(document)
+    : isConvertibleDocument(document, options.sourceExtension)
+      ? { targetExtension: options.targetExtension, convertFunction: options.convertFunction }
+      : undefined;
 
-  if (fileExtension !== options.sourceExtension) {
-    vscode.window.showInformationMessage(options.errorMessage);
+  if (!conversion) {
+    if (!document.isUntitled) {
+      vscode.window.showInformationMessage(options.errorMessage);
+    }
     return;
   }
 
-  const formattedText = options.convertFunction(document.getText());
+  const formattedText = conversion.convertFunction(document.getText());
   await createNewDocument(
-    getDirectoryPath(document),
+    getOutputDirectory(document),
     formattedText,
-    options.targetExtension
+    conversion.targetExtension
   );
 };
 
