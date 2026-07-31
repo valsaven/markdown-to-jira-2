@@ -85,11 +85,7 @@ const convertDocument = async (options: ConversionOptions): Promise<void> => {
   }
 
   const formattedText = conversion.convertFunction(document.getText());
-  await createNewDocument(
-    getOutputDirectory(document),
-    formattedText,
-    conversion.targetExtension,
-  );
+  await createNewDocument(getOutputDirectory(document), formattedText, conversion.targetExtension);
 };
 
 export const convertToMarkdown = async (): Promise<void> => {

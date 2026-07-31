@@ -3,10 +3,8 @@ import type * as vscode from 'vscode';
 
 export const getFileExtension = (document: vscode.TextDocument): string => path.extname(document.fileName);
 
-export const isConvertibleDocument = (
-  document: vscode.TextDocument,
-  sourceExtension: string,
-): boolean => document.isUntitled || getFileExtension(document) === sourceExtension;
+export const isConvertibleDocument = (document: vscode.TextDocument, sourceExtension: string): boolean =>
+  document.isUntitled || getFileExtension(document) === sourceExtension;
 
 export const getOutputDirectory = (document: vscode.TextDocument): string | undefined => {
   if (document.isUntitled) {

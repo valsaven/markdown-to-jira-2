@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Changes]
 
+### 1.1.2
+
+- Update packages
+- Replace eslint and typescript-eslint with oxfmt and oxlint
+
 ### 1.1.1
 
 - Correct format detection and untitled document conversion
