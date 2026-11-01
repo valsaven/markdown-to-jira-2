@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Changes]
 
+### 1.1.3
+
+- Update packages
+
 ### 1.1.2
 
 - Update packages
